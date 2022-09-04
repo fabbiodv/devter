@@ -1,13 +1,7 @@
-//import * as firebase from 'firebase'
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-//import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-import { getAuth, signInWithPopup, GithubAuthProvider } from "firebase/auth";
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
+import 'firebase/compat/firestore';
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyAFBhPWNbPAwxf6rlmBOhZoTMcxxsJGlyU",
   authDomain: "fabter-e8af3.firebaseapp.com",
@@ -18,26 +12,25 @@ const firebaseConfig = {
   measurementId: "G-Z5XCGGFZFJ"
 };
 
-// Initialize Firebase
-//const app = initializeApp(firebaseConfig);
-//const analytics = getAnalytics(app);
-const app = initializeApp(firebaseConfig)
-const provider = new GithubAuthProvider();
-const auth = getAuth();
+//si el numero de apps es cero, inicializa sino no
+!firebase.apps.length &&
+ firebase.initializeApp(firebaseConfig)
+
+
 
 export const loginWithGitHub = () => {
-  //const githubProvider = new firebase.auth.provider.GithubProvider()
-  return signInWithPopup(auth, provider)
-    .then(re => {
-      const {user} = re
-      const {reloadUserInfo} = user
-      const {screenName, photoUrl} = reloadUserInfo
+  const githubProvider = new firebase.auth.GithubAuthProvider()
+  return firebase.auth().signInWithPopup(githubProvider)
+  .then(user => {
+    const {additionalUserInfo} = user
+    const {username, profile} = additionalUserInfo
+    const {avatar_url} = profile
+    return {
+      avatar: avatar_url,
+      username,
+      url: 'twitter.com/fabbiodv'
 
-      return {
-        avatar: photoUrl,
-        username: screenName,
-        url:'https://midu.dev/'
-      }
-    })
+    }
+  })
   
 }
