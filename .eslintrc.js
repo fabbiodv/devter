@@ -26,6 +26,14 @@ module.exports = {
   plugins: ['react'],
   rules: {
     'react/prop-types': RULES.OFF,
-    'react/react-in-jsx-scope': RULES.OFF
+    'react/react-in-jsx-scope': RULES.OFF,
+    'react/no-unknown-property': [
+      2,
+      {
+        ignore: [
+          'jsx'
+        ]
+      }
+    ]
   }
 }
