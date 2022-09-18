@@ -4,6 +4,7 @@ import AppLayout from 'components/AppLayout'
 import { colors } from 'styles/theme'
 import Button from 'components/Button'
 import GitHub from 'components/Icons/GitHub'
+import Logo from 'components/Icons/Logo'
 import { loginWithGitHub, onAuthStateChanged } from '../firebase/client'
 import Avatar from 'components/Avatar/Index'
 
@@ -33,7 +34,7 @@ export default function Home () {
 
       <AppLayout>
         <section>
-          <img src='/devter-logo.png' alt='Logo' />
+          <Logo width='100'/>
           <h1>Fabter</h1>
           <h2>Talk about development<br />with developers 👩‍💻👨‍💻</h2>
 
@@ -57,7 +58,7 @@ export default function Home () {
         </section>
       </AppLayout>
 
-      <style jsx>{`
+      <style>{`
         img {
           width: 120px;
         }
@@ -74,13 +75,13 @@ export default function Home () {
         }
 
         h1 {
-          color: ${colors.secondary};
+          color: ${colors.primary};
           font-weight: 800;
           margin-bottom: 16px;
         }
 
         h2 {
-          color: ${colors.primary};
+          color: ${colors.secondary};
           font-size: 21px;
           margin: 0;
         }
