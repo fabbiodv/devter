@@ -1,26 +1,28 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import Head from 'next/head'
+
 import AppLayout from 'components/AppLayout'
-import { colors } from 'styles/theme'
 import Button from 'components/Button'
 import GitHub from 'components/Icons/GitHub'
 import Logo from 'components/Icons/Logo'
-import { loginWithGitHub, onAuthStateChanged } from '../firebase/client'
-import Avatar from 'components/Avatar/Index'
+
+import { colors } from 'styles/theme'
+
+import { loginWithGitHub } from '../firebase/client'
+
+import { useRouter } from 'next/router'
+import useUser, { USER_STATES } from 'hooks/useUser'
 
 export default function Home () {
-  const [user, setUser] = useState(null)
+  const user = useUser()
+  const router = useRouter()
 
   useEffect(() => {
-    onAuthStateChanged(setUser)
-  }, [])
+    user && router.replace('/home')
+  }, [user])
 
   const handleClick = () => {
-    loginWithGitHub().then(user => {
-      const { avatar, username, url } = user
-      setUser(user)
-      console.log(user)
-    }).catch(err => {
+    loginWithGitHub().catch((err) => {
       console.log(err)
     })
   }
@@ -34,52 +36,45 @@ export default function Home () {
 
       <AppLayout>
         <section>
-          <Logo width='100'/>
-          <h1>Fabter</h1>
-          <h2>Talk about development<br />with developers 👩‍💻👨‍💻</h2>
+          <Logo width="100" />
+          <h1>Devter</h1>
+          <h2>
+            Talk about development
+            <br />
+            with developers 👩‍💻👨‍💻
+          </h2>
 
           <div>
-            {user === null && (
+            {user === USER_STATES.NOT_LOGGED && (
               <Button onClick={handleClick}>
                 <GitHub fill="#fff" width={24} height={24} />
                 Login with GitHub
               </Button>
             )}
-            {user && user.avatar && (
-              <div>
-                <Avatar
-                  alt={user.username}
-                  src={user.avatar}
-                  text={user.username}
-                />
-              </div>
-            )}
+            {user === USER_STATES.NOT_KNOWN && <img src="/spinner.gif" />}
           </div>
         </section>
       </AppLayout>
 
-      <style>{`
+      <style jsx>{`
         img {
           width: 120px;
         }
-
         div {
           margin-top: 16px;
         }
-
         section {
           display: grid;
           height: 100%;
           place-content: center;
           place-items: center;
         }
-
         h1 {
           color: ${colors.primary};
           font-weight: 800;
+          font-size: 32px;
           margin-bottom: 16px;
         }
-
         h2 {
           color: ${colors.secondary};
           font-size: 21px;
